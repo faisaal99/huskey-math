@@ -36,7 +36,8 @@ type Angle = Float -- Angle in radians
 
 instance Show Vector where
   show (V2 x y)   = "Vector2(" ++ show x ++ ", " ++ show y ++ ")"
-  show (V3 x y z) = "Vector3(" ++ show x ++ ", " ++ show y ++ ", " ++ show z ++ ")"
+  show (V3 x y z) = "Vector3(" ++ show x ++ ", " ++ show y ++ ", " ++ show z
+                 ++ ")"
   show (S s)      =  "Scalar(" ++ show s ++ ")"
 
 
@@ -114,7 +115,8 @@ dot :: Vector -> Vector -> Vector
 dot (V2 a1 b1)    (V2 a2 b2)    = S (a1*a2 + b1*b2)
 dot (V3 a1 b1 c1) (V3 a2 b2 c2) = S (a1*a2 + b1*b2 + c1*c2)
 
-dot _ _ = error "Invalid Input: Vectors must be of same dimension and no scalars allowed."
+dot _ _ = error "Invalid Input: Vectors must be of same dimension "
+             ++ "and no scalars allowed."
 
 
 -- | Cross product. Assuming an orthonormalized base.
@@ -131,7 +133,7 @@ crossLen :: Vector -> Vector -> Angle -> Vector
 crossLen v1 v2 n = abs v1 * abs v2 * toScalar n
 
 
--- * Matrices -------------------------------------------------------------------
+-- * Matrices ------------------------------------------------------------------
 
 -- Standard matrix
 type WideVector =   [Float]
@@ -225,7 +227,7 @@ vectorsToMatrix v1 v2 v3 = transposeMatrix $ M [nV1, nV2, nV3]
     nV3 = vToList v3
 
 
--- * Complex numbers -------------------------------------------------------------------
+-- * Complex numbers -----------------------------------------------------------
 
 -- | Defins a cimple complex number.
 data Complex = C (Float, Float) | CN Float
