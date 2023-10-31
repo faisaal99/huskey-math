@@ -1,3 +1,24 @@
+{-
+Copyright 2023 Faisal A.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the “Software”), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-}
+
 module Mathematics where
 
 import Test.QuickCheck
@@ -81,7 +102,7 @@ vToList (S a)      = [a]
 
 
 -- Dot product with angle specified.
-dotAngle :: Vector -> Vector -> Angle -> Vector 
+dotAngle :: Vector -> Vector -> Angle -> Vector
 dotAngle v1 v2 a = S (lv1 * lv2 * cos a)
     where
         (S lv1) = abs v1
@@ -118,7 +139,7 @@ newtype Matrix  = M [WideVector]
 type MatType    =   (Int, Int)
 
 -- Fixed 2x2 matrix
-newtype Matrix2 = M2 ( Float, Float, 
+newtype Matrix2 = M2 ( Float, Float,
                        Float, Float )
 
 
@@ -134,7 +155,7 @@ instance Show Matrix where
 
             allCols [] = ""
             allCols (x:xs) = show x ++ " " ++ allCols xs
-            
+
 
 -- | Find the inverse a matrix.
 findInverse :: Matrix2 -> IO ()
@@ -146,7 +167,7 @@ findInverse mat@(M2 (a, b, c, d)) = do
 
 -- | Get the determinant of a matrix.
 getDeterminant :: Matrix2 -> Float
-getDeterminant (M2 (a, b, c, d)) = if   dd == 0 
+getDeterminant (M2 (a, b, c, d)) = if   dd == 0
                                    then error "No inverse"
                                    else 1 / dd
     where
@@ -156,22 +177,22 @@ getDeterminant (M2 (a, b, c, d)) = if   dd == 0
 -- Example matrices
 
 m, invalidMatrix :: Matrix
-m = M [ [ 1, 2, 3], 
+m = M [ [ 1, 2, 3],
         [-1, 3, 6] ]
 
-invalidMatrix = M [ [ 1, 2, 3], 
+invalidMatrix = M [ [ 1, 2, 3],
         [-1, 3, 6, 8] ]
 
 
 -- | Invariant: Determine if the matrix is a rectangle and not empty.
 isValidMatrix :: Matrix -> Bool
-isValidMatrix (M xs) 
+isValidMatrix (M xs)
     | null xs        = False
     | null (head xs) = False
     | otherwise      = do
         let ls     = map length xs
         let nubbed = nub ls
-        length nubbed == 1 
+        length nubbed == 1
 
 -- | Transpose a matrix.
 transposeMatrix :: Matrix -> Matrix
@@ -179,7 +200,7 @@ transposeMatrix (M xs) = M (transpose xs)
 
 -- | Get the dimensions of the matrix.
 matrixSize :: Matrix -> MatType
-matrixSize m@(M xs) 
+matrixSize m@(M xs)
     | not (isValidMatrix m) = error "Invalid Matrix"
     | otherwise             = (length xs, length (head xs))
 
@@ -192,8 +213,8 @@ matMul m n
 
     | otherwise = undefined
     where
-        (_, colsM) = matrixSize m 
-        (rowsN, _) = matrixSize n 
+        (_, colsM) = matrixSize m
+        (rowsN, _) = matrixSize n
 
 vectorsToMatrix :: Vector -> Vector -> Vector -> Matrix
 vectorsToMatrix v1 v2 v3 = transposeMatrix $ M [nV1, nV2, nV3]
@@ -233,7 +254,7 @@ instance Num Complex where
     abs _      = error "I don't even know why"
 
     signum = undefined
-    
+
     fromInteger n = CN (fromInteger n)
 
 
