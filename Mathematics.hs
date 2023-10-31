@@ -35,46 +35,46 @@ type Angle = Float -- Angle in radians
 
 
 instance Show Vector where
-    show (V2 x y)   = "Vector2(" ++ show x ++ ", " ++ show y ++ ")"
-    show (V3 x y z) = "Vector3(" ++ show x ++ ", " ++ show y ++ ", " ++ show z ++ ")"
-    show (S s)      =  "Scalar(" ++ show s ++ ")"
+  show (V2 x y)   = "Vector2(" ++ show x ++ ", " ++ show y ++ ")"
+  show (V3 x y z) = "Vector3(" ++ show x ++ ", " ++ show y ++ ", " ++ show z ++ ")"
+  show (S s)      =  "Scalar(" ++ show s ++ ")"
 
 
 instance Num Vector where
-    -- Vector addition
-    V2 x1 y1    + V2 x2 y2    = V2 (x1 + x2) (y1 + y2)
-    V3 x1 y1 z1 + V3 x2 y2 z2 = V3 (x1 + x2) (y1 + y2) (z1 + z2)
-    S  a        + S  b        = S  (a + b)
-    _           + _           = error "Illegal Addition"
+  -- Vector addition
+  V2 x1 y1    + V2 x2 y2    = V2 (x1 + x2) (y1 + y2)
+  V3 x1 y1 z1 + V3 x2 y2 z2 = V3 (x1 + x2) (y1 + y2) (z1 + z2)
+  S  a        + S  b        = S  (a + b)
+  _           + _           = error "Illegal Addition"
 
-    -- Vector2 multiplication with scalar
-    S a    * V2 x y = V2 (a*x) (a*y)
-    V2 x y * S a    = V2 (a*x) (a*y)
+  -- Vector2 multiplication with scalar
+  S a    * V2 x y = V2 (a*x) (a*y)
+  V2 x y * S a    = V2 (a*x) (a*y)
 
-    -- Vector3 multiplication with scalar
-    S  a     * V3 x y z = V3 (a*x) (a*y) (a*z)
-    V3 x y z * S  a     = V3 (a*x) (a*y) (a*z)
+  -- Vector3 multiplication with scalar
+  S  a     * V3 x y z = V3 (a*x) (a*y) (a*z)
+  V3 x y z * S  a     = V3 (a*x) (a*y) (a*z)
 
-    -- Scalar multiplication
-    S a * S b = S (a * b)
+  -- Scalar multiplication
+  S a * S b = S (a * b)
 
-    _ * _ = error "Illegal Multiplication"
+  _ * _ = error "Illegal Multiplication"
 
-    -- Length of vector (assuming they exist in an orthonormalized base)
-    abs (V2 x y)   = S (sqrt (x*x + y*y))
-    abs (V3 x y z) = S (sqrt (x*x + y*y + z*z))
-    -- Absolute of real number
-    abs (S a) | a >= 0    = S a
-              | otherwise = S (-a)
+  -- Length of vector (assuming they exist in an orthonormalized base)
+  abs (V2 x y)   = S (sqrt (x*x + y*y))
+  abs (V3 x y z) = S (sqrt (x*x + y*y + z*z))
+  -- Absolute of real number
+  abs (S a) | a >= 0    = S a
+            | otherwise = S (-a)
 
-    -- Inverting a vector and scalar
-    negate (V2 x y)   = V2 (-x) (-y)
-    negate (V3 x y z) = V3 (-x) (-y) (-z)
-    negate (S a)      = S  (-a)
+  -- Inverting a vector and scalar
+  negate (V2 x y)   = V2 (-x) (-y)
+  negate (V3 x y z) = V3 (-x) (-y) (-z)
+  negate (S a)      = S  (-a)
 
-    fromInteger a = S (fromInteger a)
+  fromInteger a = S (fromInteger a)
 
-    signum a = undefined
+  signum a = undefined
 
 
 -- Example vectors
@@ -104,9 +104,9 @@ vToList (S a)      = [a]
 -- Dot product with angle specified.
 dotAngle :: Vector -> Vector -> Angle -> Vector
 dotAngle v1 v2 a = S (lv1 * lv2 * cos a)
-    where
-        (S lv1) = abs v1
-        (S lv2) = abs v2
+  where
+    (S lv1) = abs v1
+    (S lv2) = abs v2
 
 
 -- | Dot product. Assuming an orthonormalized base.
@@ -117,13 +117,13 @@ dot (V3 a1 b1 c1) (V3 a2 b2 c2) = S (a1*a2 + b1*b2 + c1*c2)
 dot _ _ = error "Invalid Input: Vectors must be of same dimension and no scalars allowed."
 
 
--- Cross product. Assuming an orthonormalized base.
+-- | Cross product. Assuming an orthonormalized base.
 cross :: Vector -> Vector -> Vector
 cross (V3 a b c) (V3 x y z) = V3 newX newY newZ
-    where
-        newX = b*z - c*y
-        newY = c*x - a*z
-        newZ = a*y - b*x
+  where
+    newX = b*z - c*y
+    newY = c*x - a*z
+    newZ = a*y - b*x
 
 cross _ _ = error "Invalid Input: Only use 3-dimensional vectors"
 
@@ -144,34 +144,34 @@ newtype Matrix2 = M2 ( Float, Float,
 
 
 instance Show Matrix2 where
-    show (M2 (a, b, c, d)) = "| " ++ show a ++ " " ++ show b ++ " |\n"
-                          ++ "| " ++ show c ++ " " ++ show d ++ " |"
+  show (M2 (a, b, c, d)) = "| " ++ show a ++ " " ++ show b ++ " |\n"
+                        ++ "| " ++ show c ++ " " ++ show d ++ " |"
 
 instance Show Matrix where
-    show (M xs) = allRows xs
-        where
-            allRows []     = ""
-            allRows (x:xs) = "| " ++ allCols x ++ "|\n" ++ allRows xs
+  show (M xs) = allRows xs
+    where
+      allRows []     = ""
+      allRows (x:xs) = "| " ++ allCols x ++ "|\n" ++ allRows xs
 
-            allCols [] = ""
-            allCols (x:xs) = show x ++ " " ++ allCols xs
+      allCols [] = ""
+      allCols (x:xs) = show x ++ " " ++ allCols xs
 
 
 -- | Find the inverse a matrix.
 findInverse :: Matrix2 -> IO ()
 findInverse mat@(M2 (a, b, c, d)) = do
-    let dd = getDeterminant mat
-    let newMat = M2 (dd*d, dd*(-b), dd*(-c), dd*a)
+  let dd = getDeterminant mat
+  let newMat = M2 (dd*d, dd*(-b), dd*(-c), dd*a)
 
-    print newMat
+  print newMat
 
 -- | Get the determinant of a matrix.
 getDeterminant :: Matrix2 -> Float
 getDeterminant (M2 (a, b, c, d)) = if   dd == 0
                                    then error "No inverse"
                                    else 1 / dd
-    where
-        dd = a*d - c*b
+  where
+    dd = a*d - c*b
 
 
 -- Example matrices
@@ -181,18 +181,19 @@ m = M [ [ 1, 2, 3],
         [-1, 3, 6] ]
 
 invalidMatrix = M [ [ 1, 2, 3],
-        [-1, 3, 6, 8] ]
+                    [-1, 3, 6, 8] ]
 
 
 -- | Invariant: Determine if the matrix is a rectangle and not empty.
 isValidMatrix :: Matrix -> Bool
 isValidMatrix (M xs)
-    | null xs        = False
-    | null (head xs) = False
-    | otherwise      = do
-        let ls     = map length xs
-        let nubbed = nub ls
-        length nubbed == 1
+  | null xs        = False
+  | null (head xs) = False
+  | otherwise      = do
+    let ls     = map length xs
+    let nubbed = nub ls
+
+    length nubbed == 1
 
 -- | Transpose a matrix.
 transposeMatrix :: Matrix -> Matrix
@@ -201,27 +202,27 @@ transposeMatrix (M xs) = M (transpose xs)
 -- | Get the dimensions of the matrix.
 matrixSize :: Matrix -> MatType
 matrixSize m@(M xs)
-    | not (isValidMatrix m) = error "Invalid Matrix"
-    | otherwise             = (length xs, length (head xs))
+  | not (isValidMatrix m) = error "Invalid Matrix"
+  | otherwise             = (length xs, length (head xs))
 
 -- | Multiply matrices.
 matMul :: Matrix -> Matrix -> Matrix
 matMul m n
-    | not (isValidMatrix m) = error "First Matrix Invalid"
-    | not (isValidMatrix n) = error "Second Matrix Invalid"
-    | colsM /= rowsN        = error "Matrix multiplication not defined"
+  | not (isValidMatrix m) = error "First Matrix Invalid"
+  | not (isValidMatrix n) = error "Second Matrix Invalid"
+  | colsM /= rowsN        = error "Matrix multiplication not defined"
 
-    | otherwise = undefined
-    where
-        (_, colsM) = matrixSize m
-        (rowsN, _) = matrixSize n
+  | otherwise = undefined
+  where
+    (_, colsM) = matrixSize m
+    (rowsN, _) = matrixSize n
 
 vectorsToMatrix :: Vector -> Vector -> Vector -> Matrix
 vectorsToMatrix v1 v2 v3 = transposeMatrix $ M [nV1, nV2, nV3]
-    where
-        nV1 = vToList v1
-        nV2 = vToList v2
-        nV3 = vToList v3
+  where
+    nV1 = vToList v1
+    nV2 = vToList v2
+    nV3 = vToList v3
 
 
 -- * Complex numbers -------------------------------------------------------------------
@@ -230,32 +231,32 @@ vectorsToMatrix v1 v2 v3 = transposeMatrix $ M [nV1, nV2, nV3]
 data Complex = C (Float, Float) | CN Float
 
 instance Show Complex where
-    show (C (a, b))
-        | b < 0     = show a ++ " - i" ++ show (abs b)
-        | otherwise = show a ++ " + i" ++ show b
-    show (CN n) = show n
+  show (C (a, b))
+    | b < 0     = show a ++ " - i" ++ show (abs b)
+    | otherwise = show a ++ " + i" ++ show b
+  show (CN n) = show n
 
 instance Num Complex where
-    C (a1, b1) + C (a2, b2) = C (a1+a2, b1+b2)
-    CN a       + CN b       = CN (a + b)
-    _          + _          = error "Illegal Addition"
+  C (a1, b1) + C (a2, b2) = C (a1+a2, b1+b2)
+  CN a       + CN b       = CN (a + b)
+  _          + _          = error "Illegal Addition"
 
-    C (a1, b1) * C (a2, b2) = C (a1*a2 - b1*b2, a1*b2 + a2*b1)
+  C (a1, b1) * C (a2, b2) = C (a1*a2 - b1*b2, a1*b2 + a2*b1)
 
-    CN n       * C (a,  b)  = C (a*n, b*n)
-    C (a,  b)  * CN n       = C (a*n, b*n)
+  CN n       * C (a,  b)  = C (a*n, b*n)
+  C (a,  b)  * CN n       = C (a*n, b*n)
 
-    _          * _          = error "Illegal Multiplication"
+  _          * _          = error "Illegal Multiplication"
 
-    negate (C (a, b)) = C (-a, -b)
-    negate (CN a) = CN (-a)
+  negate (C (a, b)) = C (-a, -b)
+  negate (CN a) = CN (-a)
 
-    abs (CN n) = CN (abs n)
-    abs _      = error "I don't even know why"
+  abs (CN n) = CN (abs n)
+  abs _      = error "I don't even know why"
 
-    signum = undefined
+  signum = undefined
 
-    fromInteger n = CN (fromInteger n)
+  fromInteger n = CN (fromInteger n)
 
 
 -- Extract Re and Im from a complex number
